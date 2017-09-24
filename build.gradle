@@ -44,8 +44,7 @@ jar {
 
     manifest {
         attributes 'Implementation-Title': baseName,
-                'Implementation-Version': version,
-                'Main-Class': 'com.github.jonathanxd.bytecodedisassembler.DisassemblerKt'
+                'Implementation-Version': version
     }
 }
 
