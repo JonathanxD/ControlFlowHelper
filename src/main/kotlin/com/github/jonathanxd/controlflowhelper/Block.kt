@@ -22,7 +22,7 @@ package com.github.jonathanxd.controlflowhelper
 
 import org.objectweb.asm.tree.AbstractInsnNode
 
-class Block(entryPoint: Int) : BasicBlock(entryPoint) {
+class Block constructor(entryPoint: Int) : BasicBlock(entryPoint) {
 
     val insns = mutableListOf<AbstractInsnNode>()
 

@@ -40,7 +40,8 @@ class Test {
         visitor.methods.forEach {
             it as MethodNode
 
-            ControlFlowHelper.analyze(it)
+            val h = ControlFlowHelper.analyze(it)
+            println(h)
         }
     }
 

@@ -26,14 +26,14 @@ fun BasicBlock.hasRegularSuccessor(): Boolean =
         this.successors.any { isRegularSuccessor(it) }
 
 fun Edge.isSuccessor(block: BasicBlock) =
-        this.block == block
+        this.src == block
 
 fun Edge.isPredecessor(block: BasicBlock) =
-        this.block == block
+        this.dest == block
 
-private fun BasicBlock.isRegularSuccessor(e: Edge): Boolean = isRegular(e) && e.isSuccessor(this)
+fun BasicBlock.isRegularSuccessor(e: Edge): Boolean = isRegular(e) && e.isSuccessor(this)
 
-private fun isRegular(e: Edge): Boolean =
+fun isRegular(e: Edge): Boolean =
         when (e.type) {
             is NormalEdgeType,
             is TrueEdgeType,
@@ -54,12 +54,12 @@ val BasicBlock.regularPredecessor: BasicBlock get() = this.regularPredecessors.s
 val BasicBlock.regularSuccessors: Set<BasicBlock>
     get() = this.successors
             .filter { isRegularSuccessor(it) }
-            .map { it.block }
+            .map { it.dest }
             .toMutableSet()
 
 val BasicBlock.regularPredecessors: Set<BasicBlock>
     get() =
         this.predecessors
                 .filter { isRegularPredecessor(it) }
-                .map { it.block }
+                .map { it.src }
                 .toMutableSet()

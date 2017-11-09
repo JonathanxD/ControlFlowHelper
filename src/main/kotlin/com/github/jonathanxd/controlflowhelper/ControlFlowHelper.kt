@@ -178,13 +178,13 @@ object ControlFlowHelper {
                         current.removeRegularSuccessor(next)
 
                         next.successors.forEach {
-                            val succ = it.block
+                            val succ = it.dest
                             succ.blockReplaced(next, current)
                             current.addSuccessor(succ, it.type)
                         }
 
                         next.predecessors.forEach {
-                            val pred = it.block
+                            val pred = it.src
                             if (pred !== current) {
                                 pred.blockReplaced(next, current)
                             }

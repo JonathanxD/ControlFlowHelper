@@ -20,4 +20,4 @@
  */
 package com.github.jonathanxd.controlflowhelper
 
-data class Edge(val block: BasicBlock, val type: EdgeType)
+data class Edge(val src: BasicBlock, val dest: BasicBlock, val type: EdgeType)

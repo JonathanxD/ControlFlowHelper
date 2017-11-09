@@ -48,6 +48,8 @@ public class BlockList extends LinkedList<Block> {
         this.wrapped = wrapped;
     }
 
+    private Block last;
+
     public Block getBlock(int pos) {
         for (Block Block : this.wrapped) {
             if(Block.getEntryPoint() == pos)

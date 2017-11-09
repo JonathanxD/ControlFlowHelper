@@ -21,6 +21,7 @@
 package com.github.jonathanxd.controlflowhelper
 
 import com.github.jonathanxd.controlflowhelper.util.LateInt
+import com.github.jonathanxd.controlflowhelper.util.isRegularSuccessor
 
 /**
  * <a href=https://en.wikipedia.org/wiki/Basic_block>Basic Block</a>
@@ -42,7 +43,7 @@ abstract class BasicBlock(val entryPoint: Int,
     }
 
     fun addSuccessor(out: BasicBlock, type: EdgeType) {
-        this.addSuccessor(Edge(out, type))
+        this.addSuccessor(Edge(this, out, type))
     }
 
     fun addPredecessor(edge: Edge) {
@@ -50,7 +51,7 @@ abstract class BasicBlock(val entryPoint: Int,
     }
 
     fun addPredecessor(`in`: BasicBlock, type: EdgeType) {
-        this.addPredecessor(Edge(`in`, type))
+        this.addPredecessor(Edge(`in`, this, type))
     }
 
     fun initEndPoint(end: Int) {
@@ -58,11 +59,32 @@ abstract class BasicBlock(val entryPoint: Int,
     }
 
     fun blockReplaced(oldBlock: BasicBlock, newBlock: BasicBlock) {
-        this.successors.replaceAll { if(it.block == oldBlock) it.copy(block = newBlock) else it }
-        this.predecessors.replaceAll { if(it.block == oldBlock) it.copy(block = newBlock) else it }
+        this.successors.replaceAll {
+            when (oldBlock) {
+                it.src -> it.copy(src = newBlock)
+                it.dest -> it.copy(dest = oldBlock)
+                else -> it
+            }
+        }
+        this.predecessors.replaceAll {
+            when (oldBlock) {
+                it.src -> it.copy(src = newBlock)
+                it.dest -> it.copy(dest = oldBlock)
+                else -> it
+            }
+        }
     }
 
-    fun removeRegularSuccessor(block: BasicBlock): Boolean =
-            this.successors.removeIf { it.block == block }
+    fun removeRegularSuccessor(block: BasicBlock): Boolean {
+        val iter = this.successors.iterator()
+
+        while (iter.hasNext()) iter.next().let {
+            this.isRegularSuccessor(it) && it.dest == block
+            iter.remove()
+            return true
+        }
+
+        return false
+    }
 
 }
