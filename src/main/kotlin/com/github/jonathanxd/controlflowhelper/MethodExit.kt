@@ -2,7 +2,7 @@
  *
  *  Copyright 2012 Tobias Gierke <tobias.gierke@code-sourcery.de>
  *
- *  Original project:
+ *  Original project: https://github.com/toby1984/controlflow
  *
  *  2017 Rewrite in Kotlin by JonathanxD <https://github.com/JonathanxD>
  *
