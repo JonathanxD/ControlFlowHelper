@@ -25,7 +25,7 @@ import org.objectweb.asm.Opcodes.*
 /**
  * Returns true if this is an valid jmp.
  *
- * From CodeAPI-BytecodeReader OpcodeUtil
+ * From Kores-BytecodeReader OpcodeUtil
  */
 fun Int.isValidIfExprJmp() = when (this) {
     IFEQ, IF_ICMPEQ, IF_ACMPEQ, IFNULL,
@@ -34,3 +34,10 @@ fun Int.isValidIfExprJmp() = when (this) {
     IFGT, IF_ICMPGT, IFGE, IF_ICMPGE -> true
     else -> false
 }
+
+/**
+ * Returns true if this is an valid jmp.
+ *
+ * From Kores-BytecodeReader OpcodeUtil
+ */
+fun Int.isGoto() = this == GOTO

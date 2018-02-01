@@ -72,6 +72,7 @@ object ControlFlowHelper {
                 val target = insns.indexOfFirst { it is LabelNode && it.label == next.label.label }
 
                 val jumpExpr = next.opcode.isValidIfExprJmp()
+                val gotoExpr = next.opcode.isGoto()
 
                 if (jumpExpr) {
                     edgeType = EdgeTypes.falseType
@@ -81,7 +82,13 @@ object ControlFlowHelper {
 
                 targetBlock.addPredecessor(current, EdgeTypes.normal)
 
-                current.addSuccessor(targetBlock, if (jumpExpr) EdgeTypes.trueType else EdgeTypes.normal)
+                val type = when {
+                    jumpExpr -> EdgeTypes.trueType
+                    gotoExpr -> EdgeTypes.jump(next)
+                    else -> EdgeTypes.normal
+                }
+
+                current.addSuccessor(targetBlock, type)
 
                 if (target == Opcodes.GOTO) {
                     last = null
@@ -104,13 +111,14 @@ object ControlFlowHelper {
 
             val endTarget = insns.indexOfFirst { it is LabelNode && it.label == node.end.label }
 
-            val handlerTarget = insns.indexOfFirst { it is LabelNode && it.label == node.handler.label }
+            val handlerTarget =
+                insns.indexOfFirst { it is LabelNode && it.label == node.handler.label }
 
             val handler = blocks.getBlock(handlerTarget)
 
             (startTarget..endTarget)
-                    .filter { it != handlerTarget }
-                    .forEach { blocks.getBlock(it).addSuccessor(handler, EdgeTypes.exception(node)) }
+                .filter { it != handlerTarget }
+                .forEach { blocks.getBlock(it).addSuccessor(handler, EdgeTypes.exception(node)) }
         }
 
         val newBlocks = mergeBlocks(blocks, mn).toMutableList()
@@ -141,8 +149,8 @@ object ControlFlowHelper {
         }
 
         (0 until lines.size - 2)
-                .filter { lines[it] + 1 != lines[it + 1] }
-                .forEach { throw IllegalStateException("Missing line " + (lines[it] + 1)) }
+            .filter { lines[it] + 1 != lines[it + 1] }
+            .forEach { throw IllegalStateException("Missing line " + (lines[it] + 1)) }
 
         val sorted = arrayOfNulls<Block>(lines.size)
 
@@ -199,7 +207,7 @@ object ControlFlowHelper {
     }
 
     private fun getSuccessorCountIgnoringEndBlock(block: BasicBlock): Int =
-            block.regularSuccessors.count { it !is MethodExit }
+        block.regularSuccessors.count { it !is MethodExit }
 
     private fun getSuccessorIgnoringEndBlock(block: BasicBlock): BasicBlock? {
         val successors = block.regularSuccessors

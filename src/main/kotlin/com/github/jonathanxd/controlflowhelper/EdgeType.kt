@@ -20,7 +20,6 @@
  */
 package com.github.jonathanxd.controlflowhelper
 
-import org.objectweb.asm.tree.InsnNode
 import org.objectweb.asm.tree.JumpInsnNode
 import org.objectweb.asm.tree.TryCatchBlockNode
 
@@ -33,10 +32,10 @@ object EdgeTypes {
     val falseType = FalseEdgeType
 
     fun jump(node: JumpInsnNode): EdgeType =
-            JumpEdgeType(node)
+        JumpEdgeType(node)
 
     fun exception(node: TryCatchBlockNode): EdgeType =
-            ExceptionEdgeType(node)
+        ExceptionEdgeType(node)
 
 
 }
@@ -47,4 +46,4 @@ object FalseEdgeType : EdgeType
 
 data class JumpEdgeType(val node: JumpInsnNode) : EdgeType
 
-data class ExceptionEdgeType(val node: TryCatchBlockNode): EdgeType
+data class ExceptionEdgeType(val node: TryCatchBlockNode) : EdgeType
